@@ -112,7 +112,7 @@
 - check-public-data.mjs에 실제 키가 있을 때 시·군·구와 상세 필터까지 확인하는 검증 추가. 인증값·업체 원문은 출력하지 않고 상태와 건수만 출력.
 - 로컬 인증값과 소스/Git 객체 대조 검사에서 키 노출 없음. 이번 변경은 검증 스크립트/문서와 로컬 환경변수이며 앱 동작 코드는 변경하지 않음. 빌드/전체 단위 테스트는 재실행하지 않음(직전 51개 및 빌드 성공 기록 유지).
 
-## 2026-11-13 · 5단계 및 라운드 UI (배포 진행 중)
+## 2026-11-13 · 5단계 및 라운드 UI (공개 배포 완료 · 시각 QA 제한)
 - 사용자 승인에 따라 최종 점검과 배포 진행. 요청한 느낌에 맞춰 크림/옐로/민트/라일락, 둥근 카드/버튼/사이드바, 대시보드 환영 배너와 로컬시그널 브랜딩/파비콘 적용. 카카오 로고·상표를 복제하지 않음.
 - theme.css를 별도 관리하고 가독성을 위한 작은 글씨 대비 보완. 모바일 단일 열과 메뉴 스크롤, reduced-motion 기존 지원 유지. 불필요한 이전 검색 타이머 제거.
 - Vercel 기존 인증 확인 및 현재 열려 있던 pdh7/local-signal-pdh 프로젝트 연결. Production 도메인 https://local-signal-pdh.vercel.app.
@@ -120,4 +120,9 @@
 - vercel.json(Next.js/npm ci/npm run build), .vercelignore, DEPLOYMENT.md 및 환경 동기화 스크립트 준비.
 - 검증: 기능/회귀 테스트 52개 성공, TypeScript 검사 및 최종 npm.cmd run build 성공. 브라우저 정적 파일 13개에서 서버 인증값 일치 없음. 소스/Git 인증정보 검사 통과.
 - 제한: 브라우저 제어 호스트 unavailable로 실브라우저/모바일 시각 QA는 수행하지 못함. DOM 테스트를 브라우저 시각 테스트로 보고하지 않음. Maps/OpenAI/검색광고는 해당 키 미설정 상태 유지.
-- GitHub 동기화 후 Vercel Production 배포 및 공개 HTTP/외부 API 검증 예정. 결과는 완료 후 추가 기록.
+- GitHub main에 cbb055d로 구현 반영 후 Vercel Production 배포 READY 및 https://local-signal-pdh.vercel.app 도메인 연결 확인.
+- 로그인/우회 헤더 없이 공개 도메인 GET / HTTP 200, 새 제목(로컬시그널), 환영 배너 HTML 및 rounded/yellow CSS 반영 확인. 브라우저 이미지 검증으로 보고하지 않음.
+- 공개 배포에서 공공 지역 25개/서울 원본 1,000건 중 카페 27개 HTTP 200. 마포구 지정 및 실제 업체명·주소·업종 조합 상세 필터 HTTP 200.
+- 공개 배포에서 블로그 50개, 지역 검색 5개, 상대 관심도 7개 관측점 HTTP 200. 키는 Vercel 서버 Secret에서 읽으며 브라우저로 반환하지 않음.
+- 제출 URL: https://local-signal-pdh.vercel.app . 추가 로그인이 필요하지 않은 공개 프로덕션 URL임을 확인. 기존 GitHub 연동의 main push 시 자동 배포도 확인.
+- 실제 Maps/OpenAI/검색광고 키 검증과 실브라우저/모바일 시각 QA는 남은 제한 사항. 키 없는 기능은 미연결 안내/비활성화를 유지하며 기본 기능은 작동.

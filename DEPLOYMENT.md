@@ -4,6 +4,7 @@
 - Vercel 프로젝트: `pdh7/local-signal-pdh`
 - Production 도메인: https://local-signal-pdh.vercel.app
 - Framework: Next.js / 설치: npm ci / 빌드: npm run build
+- 검증: Production READY, 비로그인 HTTP 200 및 공공/블로그/트렌드 실제 응답 확인(2026-11-13). 세부 기록은 PROGRESS.md.
 
 ## 환경변수
 키는 Git에 올리지 않습니다. `.vercelignore`도 `.env*`, `.qa`, `.git`, node_modules, .next를 배포 소스에서 제외합니다. 실제 값은 Vercel 서버 Secret에 등록합니다.
