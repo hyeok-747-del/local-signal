@@ -1,0 +1,8 @@
+// Explicit live trend query; other optional integrations are checked without consuming AI calls.
+import assert from 'node:assert/strict';
+const base=process.env.SMOKE_URL||'http://localhost:3001',status=await fetch(`${base}/api/status`).then(r=>r.json());
+const font=await fetch(`${base}/fonts/NanumGothic-Regular.ttf`);assert.equal(font.status,200);assert.ok((await font.arrayBuffer()).byteLength>100000);console.log('Korean PDF font: HTTP 200');
+const ai=await fetch(`${base}/api/ai`).then(r=>r.json());console.log(JSON.stringify({aiConfigured:ai.configured,aiModelConfigured:ai.modelConfigured,searchAdConfigured:status.searchAd}));
+if(!ai.configured||!ai.modelConfigured){const response=await fetch(`${base}/api/ai`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({input:'기본 보고서 테스트'})});assert.equal(response.status,503);assert.equal((await response.json()).error.code,'NOT_CONFIGURED');console.log('AI missing config: HTTP 503');}
+if(!status.searchAd){const response=await fetch(`${base}/api/naver/volume?keyword=${encodeURIComponent('서울카페')}`);assert.equal(response.status,503);assert.equal((await response.json()).error.code,'NOT_CONFIGURED');console.log('Search Ad missing config: HTTP 503');}
+if(status.naverBlog){const response=await fetch(`${base}/api/naver/trends`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({startDate:'2026-11-01',endDate:'2026-11-07',timeUnit:'date',keywordGroups:[{groupName:'카페',keywords:['서울 카페']}]})});const data=await response.json();assert.equal(response.status,200);assert.equal(data.metric,'relative-interest');console.log(JSON.stringify({trendStatus:response.status,groups:data.results.length,points:data.results.reduce((n,g)=>n+g.data.length,0)}));}

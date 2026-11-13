@@ -1,0 +1,4 @@
+import type {Business} from './business.ts';
+import type {AnalysisEntries} from './blog-analysis.ts';
+export type FoundEvent={business:string;title:string;period:string;benefit:string;url:string;postDate:string};
+export function findEvents(businesses:Business[],entries:AnalysisEntries):FoundEvent[]{return businesses.flatMap(b=>(entries[b.id]?.data.items||[]).filter(p=>/할인|이벤트|프로모션|쿠폰|1\s*\+\s*1/.test(`${p.title} ${p.description}`)).map(p=>{const text=`${p.title} ${p.description}`,period=text.match(/\d{4}[.\-/]\s*\d{1,2}[.\-/]\s*\d{1,2}\s*(?:~|부터|–|-)\s*(?:\d{4}[.\-/]\s*)?\d{1,2}[.\-/]\s*\d{1,2}/)?.[0]||'미확인',benefits=text.match(/\d+(?:\.\d+)?\s*%\s*(?:할인)?|[\d,]+\s*원\s*(?:할인|쿠폰)|1\s*\+\s*1|무료\s*(?:증정|제공|배송)/g);return {business:b.name,title:p.title,period,benefit:benefits?[...new Set(benefits)].join(', '):'미확인',url:p.url,postDate:p.date};})).filter((e,i,a)=>a.findIndex(x=>x.business===e.business&&x.url===e.url)===i);}

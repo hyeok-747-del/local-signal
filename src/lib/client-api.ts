@@ -1,2 +1,3 @@
 import type {ApiError} from './contracts';
 export async function clientApi<T>(url:string,signal?:AbortSignal):Promise<T>{const response=await fetch(url,{signal,cache:'no-store'});let data:T&Partial<ApiError>;try{data=await response.json();}catch{throw new Error('서버 응답을 읽지 못했습니다. 잠시 후 다시 시도해 주세요.');}if(!response.ok)throw new Error(data.error?.message||'요청에 실패했습니다.');return data;}
+export async function postJson<T>(url:string,body:unknown,signal?:AbortSignal):Promise<T>{const response=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body),cache:'no-store',signal});const data=await response.json();if(!response.ok)throw new Error(data.error?.message||'요청에 실패했습니다.');return data;}

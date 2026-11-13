@@ -22,6 +22,14 @@ NEXT_PUBLIC_NAVER_MAP_CLIENT_ID=네이버_Maps_공개_Key_ID
 
 사용 엔드포인트는 `https://apis.data.go.kr/B553077/api/open/sdsc2`의 `baroApi`(행정구역)와 `storeListInDong`(지역 업체)입니다. 시·군·구는 제공기관 코드로 확인한 뒤 조회합니다. 개편 지역이 API에 아직 없으면 시·도 전체 검색을 이용하세요.
 
+공식 요청 변수에 맞춰 서버가 `PUBLIC_DATA_API_KEY`를 `ServiceKey`에 매핑합니다. 지역 목록은 `baroApi?resId=dong&catId=cty&type=json`, 업체 원본은 `storeListInDong?divId=ctprvnCd&key=시도코드&pageNo=페이지&numOfRows=1000&type=json`을 사용합니다. 시·군·구 선택 시 `divId=signguCd`와 공식 시·군·구 코드를 사용합니다. 인증키는 이 안내나 브라우저 요청에 넣지 않습니다.
+
+검색창의 “업체명·주소·업종 상세 검색”에서 각 조건을 지정할 수 있습니다. 통합 키워드와 모든 상세 조건을 서버에서 함께 필터합니다. 세부 문자열을 공공 API에 존재하지 않는 파라미터로 보내지 않습니다. 신규 발견 이력도 상세 검색 조건별로 구분합니다.
+
+빈 결과는 지역 원본 0건(`NO_REGIONAL_DATA`), 불러온 페이지의 조건 불일치(`NO_MATCH_IN_PAGE`), 요청 페이지가 비어 있음(`EMPTY_PAGE`)으로 구분합니다. 인증·호출 한도·통신·응답 형식 오류는 별도의 오류 응답으로 표시합니다. 원본을 읽지 못한 것을 정상 0건으로 처리하지 않습니다.
+
+로컬 프로덕션 서버를 `npm.cmd start -- --port 3001`로 실행하고 `node scripts/check-public-data.mjs`로 확인합니다. 키가 있으면 실제 API를 호출하고 없으면 미설정 처리만 검증합니다. 실제 키 값과 원문은 출력하지 않습니다.
+
 이 API는 자유 키워드 통합 검색이 아닙니다. 지역 원본을 1,000건씩 가져오고 상호·업종·주소에 키워드가 모두 포함된 업체를 찾습니다. “다음 원본 1,000건 불러오기”로 남은 원본을 계속 검색할 수 있습니다. 현재 확인한 원본 수와 제공기관 전체 원본 수를 구분하여 표시합니다. 전체 탐색 전 0건은 지역 내 업체 부재를 의미하지 않습니다. 결과는 영업/폐업 실시간 보증이 아닙니다.
 
 ## 2. NAVER API HUB 블로그·지역·검색어 트렌드
@@ -51,4 +59,6 @@ NEXT_PUBLIC_NAVER_MAP_CLIENT_ID=네이버_Maps_공개_Key_ID
 - Vercel 인스턴스별 임시 분당 제한이 있으며 분산 환경의 전체 호출량을 보장하지 않습니다. 공개 배포 전 제공기관 콘솔의 사용량과 한도를 확인합니다.
 
 ## Vercel에서 설정 (5단계)
+4단계 OpenAI 요약·검색광고·리뷰·PDF 설정과 사용법은 [STAGE4_GUIDE.md](STAGE4_GUIDE.md)를 확인하세요. OpenAI는 `OPENAI_API_KEY`뿐 아니라 사용 가능한 `OPENAI_MODEL`도 필요합니다. 키·Secret은 `.env.local`에만 입력합니다.
+
 프로젝트 Settings → Environment Variables에 동일한 변수명을 추가하고 필요한 Production/Preview 환경에 적용 후 재배포합니다. Maps 허용 URL에 공개 도메인을 추가합니다. Secret은 `NEXT_PUBLIC_` 변수로 만들지 않습니다. OpenAI·데이터랩·검색광고는 4단계에 연결합니다.

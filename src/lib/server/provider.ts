@@ -14,7 +14,7 @@ export async function upstream(url:URL, init:RequestInit={}, fetcher:Fetcher=fet
   if(!response.ok){if(response.status===429)throw new ServiceError('RATE_LIMITED','외부 API 호출 한도에 도달했습니다. 잠시 후 다시 시도해 주세요.',429);if(response.status===401||response.status===403)throw new ServiceError('INVALID_CREDENTIALS','API 인증 또는 이용 권한을 확인해 주세요.',502);throw new ServiceError('UPSTREAM_ERROR','외부 API가 응답하지 않습니다. 잠시 후 다시 시도해 주세요.');}
   const text=await response.text();
   // 공공데이터 게이트웨이는 HTTP 200으로 XML 인증/할당량 오류를 반환할 수 있습니다.
-  if(text.trim().startsWith('<')){if(/LIMITED|LIMIT.*EXCEED|TOO_MANY/i.test(text))throw new ServiceError('RATE_LIMITED','공공 API 호출 한도를 확인해 주세요.',429);if(/SERVICE_KEY|ACCESS_DENIED|AUTH|REGISTERED/i.test(text))throw new ServiceError('INVALID_CREDENTIALS','공공데이터 인증키와 활용 승인을 확인해 주세요.');throw new ServiceError('INVALID_RESPONSE','공공 API에서 JSON 대신 오류 응답을 반환했습니다.');}
+  if(text.trim().startsWith('<')){if(/LIMITED|LIMIT.*EXCEED|TOO_MANY/i.test(text))throw new ServiceError('RATE_LIMITED','공공 API 호출 한도를 확인해 주세요.',429);if(/SERVICE_KEY|ACCESS_DENIED|AUTH|REGISTERED/i.test(text))throw new ServiceError('INVALID_CREDENTIALS','공공데이터 인증키와 활용 승인을 확인해 주세요.');if(/NO_OPENAPI_SERVICE|SERVICE_NOT_FOUND/i.test(text))throw new ServiceError('SERVICE_UNAVAILABLE','공공 API 경로 또는 제공기관의 서비스 운영 상태를 확인하세요.');throw new ServiceError('INVALID_RESPONSE','공공 API에서 JSON 대신 오류 응답을 반환했습니다.');}
   try{return JSON.parse(text);}catch{throw new ServiceError('INVALID_RESPONSE','외부 API 응답 형식이 올바르지 않습니다.');}
  }catch(error){if(error instanceof ServiceError)throw error;throw new ServiceError('NETWORK_ERROR','외부 API 연결에 실패했거나 응답 시간이 초과되었습니다. 잠시 후 재시도해 주세요.',504);}
 }
@@ -30,5 +30,5 @@ export function publicEnvelope(payload:unknown){
 export function publicUrl(operation:string,key:string,params:Record<string,string>){
  let decoded=key.trim();try{decoded=decodeURIComponent(decoded);}catch{throw new ServiceError('INVALID_CREDENTIALS','공공데이터 인증키 형식을 확인해 주세요.');}
  const url=new URL(`https://apis.data.go.kr/B553077/api/open/sdsc2/${operation}`);
- url.search=new URLSearchParams({serviceKey:decoded,type:'json',...params}).toString();return url;
+ url.search=new URLSearchParams({ServiceKey:decoded,type:'json',...params}).toString();return url;
 }

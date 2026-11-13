@@ -11,6 +11,13 @@ are imported only by `src/app/api/*/route.ts`. Never import them in client code.
 Use npm with the tracked package-lock.json. See README.md for setup.
 NAVER integrations use NAVER API HUB, not legacy Developers endpoints.
 See NAVER_API_HUB.md for server env names and official authentication headers.
+Stage 3 analysis is in src/lib/blog-analysis.ts and discoveries.ts, with UI in
+blog-analysis-panel.tsx / blog-activity.tsx. Date windows use Asia/Seoul days;
+never equate incomplete search samples with total marketing activity.
+Stage 4 UI is in keyword-panel/review-panel/event-panel/report-panel.tsx.
+Shared analysis is in reviews.ts, events.ts and report.ts. PDF uses pdf-lib with
+the OFL font in public/fonts; keep full font embedding (subset caused missing
+Korean glyphs in visual QA). AI/server keys and models are server-only env.
 
 ## Working in this workspace
 

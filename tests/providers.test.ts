@@ -30,7 +30,7 @@ test('빈 응답과 중첩 응답 처리, 손상 형식 및 제공기관 오류 
  assert.throws(()=>publicEnvelope({}),{code:'INVALID_RESPONSE'});assert.throws(()=>publicEnvelope({header:{resultCode:'30'},body:{items:[]}}),{code:'INVALID_CREDENTIALS'});
 });
 test('인증키 인코딩을 한 번만 수행하고 임의 호스트를 허용하지 않음',()=>{
- const a=publicUrl('storeListInDong','a%2Bb%2Fc%3D',{key:'11'});assert.equal(a.hostname,'apis.data.go.kr');assert.equal(a.searchParams.get('serviceKey'),'a+b/c=');assert.ok(!a.href.includes('%252B'));
+ const a=publicUrl('storeListInDong','a%2Bb%2Fc%3D',{key:'11'});assert.equal(a.hostname,'apis.data.go.kr');assert.equal(a.searchParams.get('ServiceKey'),'a+b/c=');assert.ok(!a.href.includes('%252B'));
 });
 test('인증 실패/한도/네트워크/비JSON 오류를 안전한 메시지로 처리',async()=>{
  await assert.rejects(upstream(new URL('https://example.com'),{},responder({},403)),{code:'INVALID_CREDENTIALS'});
