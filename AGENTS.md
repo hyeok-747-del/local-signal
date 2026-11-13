@@ -21,6 +21,9 @@ the OFL font in public/fonts; keep full font embedding (subset caused missing
 Korean glyphs in visual QA). AI/server keys and models are server-only env.
 The rounded yellow/cream theme is src/app/theme.css, loaded after globals.css.
 Vercel uses DATA_API_KEY as server Secret alias for local PUBLIC_DATA_API_KEY.
+Maps use Kakao Maps Web SDK with NEXT_PUBLIC_KAKAO_MAP_KEY. See
+KAKAO_MAP_SETUP.md. Use maps.load(autoload=false), setBounds and relayout;
+Kakao event.removeListener requires target/event/handler, not a returned handle.
 
 ## Working in this workspace
 

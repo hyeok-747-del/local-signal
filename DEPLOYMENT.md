@@ -14,7 +14,7 @@
 | PUBLIC_DATA_API_KEY | DATA_API_KEY | 공공 상가정보 서버 인증 |
 | NAVER_API_HUB_CLIENT_ID | 동일 | 검색/트렌드 Client ID |
 | NAVER_API_HUB_CLIENT_SECRET | 동일 | 검색/트렌드 Secret |
-| NEXT_PUBLIC_NAVER_MAP_CLIENT_ID | 동일 | 선택적 Maps 공개 SDK 식별자 |
+| NEXT_PUBLIC_KAKAO_MAP_KEY | 동일 | 카카오맵 JavaScript 공개 키 |
 | OPENAI_API_KEY / OPENAI_MODEL | 동일 | 선택적 AI 요약 |
 | NAVER_AD_CUSTOMER_ID / NAVER_AD_API_KEY / NAVER_AD_SECRET_KEY | 동일 | 선택적 검색광고 |
 

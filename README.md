@@ -37,7 +37,7 @@ HTTP 검증은 프로덕션 서버를 `npm.cmd start -- --port 3001`로 실행�
 ## 구조
 - `src/app`: App Router 진입점, 메타데이터, 전역 스타일(Tailwind CSS 4)
 - `src/components/dashboard.tsx`: 대시보드, 검색, 선택, 비교 및 로컬 저장
-- `src/components/business-map.tsx`: 네이버 Maps SDK 및 위치/업체 연동
+- `src/components/business-map.tsx`, `kakao-business-map.tsx`: 카카오맵 SDK 및 위치/업체 연동. 설정은 [KAKAO_MAP_SETUP.md](KAKAO_MAP_SETUP.md) 참고.
 - `src/components/blog-search.tsx`: 블로그 검색 및 게시글 추가 로딩
 - `src/app/api`: 업체/지역/블로그/설정 상태 Route Handlers
 - `src/lib/server`: 고정 호스트 외부 API 호출, 응답 정규화, 오류 및 제한 처리

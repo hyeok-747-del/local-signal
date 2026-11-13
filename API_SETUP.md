@@ -9,7 +9,7 @@
 PUBLIC_DATA_API_KEY=공공데이터포털_인증키
 NAVER_API_HUB_CLIENT_ID=API_HUB_Client_ID
 NAVER_API_HUB_CLIENT_SECRET=API_HUB_Client_Secret
-NEXT_PUBLIC_NAVER_MAP_CLIENT_ID=네이버_Maps_공개_Key_ID
+NEXT_PUBLIC_KAKAO_MAP_KEY=카카오_JavaScript_키
 ```
 
 입력 후 실행 중인 서버를 종료하고 `npm.cmd run dev`로 다시 실행합니다. 지도 공개 식별자는 빌드 시 클라이언트 코드에 포함되므로 프로덕션에서는 다시 빌드/배포해야 합니다. 키 상태를 새로 확인하려면 페이지를 새로고침합니다.
@@ -43,11 +43,11 @@ Vercel CLI의 Secret 등록 정책 때문에 배포 환경에서는 같은 인�
 
 [공식 API HUB 블로그 문서](https://api.ncloud-docs.com/docs/naver-api-hub-search-blog)에 따라 날짜순 조회와 시작 위치 제한을 처리합니다. 요청당 최대 50개를 불러오고 시작 위치 1,000 범위 안에서 추가 탐색합니다. 결과 개수는 확인된 게시글 수이며 전체 게시글 수로 표시하지 않습니다. 지역·업종을 검색어에 포함해도 동명 업체/타 업체가 섞일 수 있으므로 원문을 확인하세요.
 
-## 3. 네이버 Maps
-1. [네이버 클라우드 콘솔](https://console.ncloud.com/)에서 Maps 서비스와 애플리케이션을 설정합니다.
-2. Dynamic Map 이용 권한을 활성화하고 Web 서비스 허용 URL에 로컬 주소와 추후 Vercel 도메인을 등록합니다. 현재 개발 시에는 `http://localhost:3000`을 사용합니다.
-3. 공개 Key ID를 `NEXT_PUBLIC_NAVER_MAP_CLIENT_ID`에 입력합니다. **Secret Key는 입력하지 않습니다.**
-4. [공식 SDK 가이드](https://navermaps.github.io/maps.js.ncp/docs/tutorial-2-Getting-Started.html)에 맞춰 `ncpKeyId`로 SDK를 로드합니다.
+## 3. 카카오맵
+1. [카카오디벨로퍼스](https://developers.kakao.com/)에서 앱을 설정하고 카카오맵 사용 설정을 ON으로 바꿉니다.
+2. JavaScript 키의 SDK 허용 도메인에 `http://localhost:3000`, 필요 시 `http://localhost:3001`, `https://local-signal-pdh.vercel.app`을 등록합니다.
+3. JavaScript 키를 `NEXT_PUBLIC_KAKAO_MAP_KEY`에 입력합니다. **REST API 키·Admin 키는 입력하지 않습니다.**
+4. [공식 지도 가이드](https://apis.map.kakao.com/web/guide/)에 맞춰 지도 전용 SDK를 로드합니다. 자세한 설정은 [KAKAO_MAP_SETUP.md](KAKAO_MAP_SETUP.md)를 확인하세요.
 5. 실제 업체 검색 결과에서 좌표가 있는 업체만 마커로 표시합니다. 마커/업체명 클릭으로 정보와 해당 목록 페이지를 연결하고 관심업체를 저장합니다. 가상 좌표는 생성하지 않습니다.
 
 지도 오류 시에도 업체 검색·선택·비교는 사용할 수 있습니다. 키 설정 유무는 인증 성공을 뜻하지 않으며 도메인/이용 권한은 실제 표시로 확인해야 합니다. 클라우드 서비스 요금과 한도를 확인하세요.

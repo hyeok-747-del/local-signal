@@ -11,6 +11,7 @@ const {default:BusinessMap}=await import('../src/components/business-map.tsx');
 const {default:KeywordPanel}=await import('../src/components/keyword-panel.tsx');
 const {default:ReportPanel}=await import('../src/components/report-panel.tsx');
 const {default:EventPanel}=await import('../src/components/event-panel.tsx');
+const {loadKakaoMaps}=await import('../src/lib/kakao-maps.ts');
 const originalFetch=globalThis.fetch;
 const key='local-insight:favorites:v1';
 afterEach(()=>{cleanup();localStorage.clear();globalThis.fetch=originalFetch;});
@@ -70,16 +71,16 @@ test('늦게 도착한 실제 API 응답이 DEMO 결과를 덮어쓰지 않음',
  assert.ok(view.getByRole('button',{name:'[DEMO] 모노 커피 1호점'}));assert.equal(view.queryByText('지역 원본 탐색 완료'),null);
 });
 test('지도 SDK mock: 실제 좌표 마커·클릭 정보·관심 저장 및 정리',async()=>{
- const previousKey=process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID;process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID='test-public-key';
- const clicks:(()=>void)[]=[];let markerCount=0,removed=0,destroyed=0,focused='',saved='';
- const api={Map:class{panTo(){}fitBounds(){}destroy(){destroyed++;}},LatLng:class{constructor(public lat:number,public lng:number){}},LatLngBounds:class{extend(){}},Marker:class{constructor(){markerCount++;}setMap(){removed++;}},Event:{addListener:(_target:object,_event:string,callback:()=>void)=>{clicks.push(callback);return {};},removeListener:()=>{},trigger:()=>{}}};
- window.naver={maps:api};Object.defineProperty(globalThis,'ResizeObserver',{configurable:true,value:class{observe(){}disconnect(){}}});
+ const previousKey=process.env.NEXT_PUBLIC_KAKAO_MAP_KEY;process.env.NEXT_PUBLIC_KAKAO_MAP_KEY='test-public-key';
+ const clicks:(()=>void)[]=[];let markerCount=0,removed=0,focused='',saved='';
+ const api={load:(ready:()=>void)=>ready(),Map:class{panTo(){}setBounds(){}setCenter(){}setLevel(){}relayout(){}addControl(){}},LatLng:class{constructor(public lat:number,public lng:number){}},LatLngBounds:class{extend(){}},Marker:class{constructor(){markerCount++;}setMap(){removed++;}},ZoomControl:class{},ControlPosition:{RIGHT:1},event:{addListener:(_target:object,_event:string,callback:()=>void)=>{clicks.push(callback);return {};},removeListener:()=>{},trigger:()=>{}}};
+ window.kakao={maps:api};Object.defineProperty(globalThis,'ResizeObserver',{configurable:true,value:class{observe(){}disconnect(){}}});
  const actual={id:'public-map',name:'테스트 지도 업체',category:'카페',province:'서울특별시',district:'마포구',address:'테스트 주소',latitude:37.55,longitude:126.92,source:'public-data' as const};
  try{
   const view=render(React.createElement(BusinessMap,{items:[actual,{...actual,id:'public-no-location',latitude:undefined,longitude:undefined}],focused:actual.id,onFocus:id=>{focused=id;},onSave:b=>{saved=b.id;},favorites:[],demo:false}));
   await waitFor(()=>assert.equal(markerCount,1));clicks[0]();assert.equal(focused,actual.id);
-  fireEvent.click(view.getByRole('button',{name:'관심업체 추가'}));assert.equal(saved,actual.id);view.unmount();assert.equal(destroyed,1);assert.equal(removed,1);
- }finally{delete window.naver;if(previousKey===undefined)delete process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID;else process.env.NEXT_PUBLIC_NAVER_MAP_CLIENT_ID=previousKey;}
+  fireEvent.click(view.getByRole('button',{name:'관심업체 추가'}));assert.equal(saved,actual.id);view.unmount();assert.equal(removed,1);
+ }finally{delete window.kakao;if(previousKey===undefined)delete process.env.NEXT_PUBLIC_KAKAO_MAP_KEY;else process.env.NEXT_PUBLIC_KAKAO_MAP_KEY=previousKey;}
 });
 test('같은 검색을 반복하면 새 업체만 신규 발견, 최초 발견일과 브라우저 기록 유지',async()=>{
  let round=0;
@@ -131,4 +132,8 @@ test('공공 검색 상세 조건을 서버에 전달하고 빈 결과의 원인
  let requested:URL|null=null;globalThis.fetch=async(url)=>{if(String(url).includes('/api/status'))return Response.json({publicData:false,naverBlog:true,maps:false});requested=new URL(String(url),'http://localhost');return Response.json({items:[],source:'public-data',providerPage:1,scanned:1000,total:5000,hasMore:true,emptyReason:'NO_MATCH_IN_PAGE',warning:'서버 필터링'});};
  const view=render(React.createElement(Dashboard));fireEvent.click(view.getByText('업체명·주소·업종 상세 검색'));fireEvent.change(view.getByLabelText('업체명'),{target:{value:'테스트 업체'}});fireEvent.change(view.getByLabelText('주소 검색'),{target:{value:'테헤란로'}});fireEvent.change(view.getByLabelText('업종 검색'),{target:{value:'카페'}});fireEvent.click(view.getByRole('button',{name:'업체 검색'}));
  await waitFor(()=>assert.ok(view.getByText('현재 원본 페이지에 조건 일치 업체가 없습니다')));assert.equal(requested!.searchParams.get('name'),'테스트 업체');assert.equal(requested!.searchParams.get('address'),'테헤란로');assert.equal(requested!.searchParams.get('category'),'카페');assert.ok(view.getByRole('button',{name:'다음 원본 1,000건 불러오기'}));
+});
+test('카카오맵 SDK URL·autoload=false·로드 콜백 및 오류 후 재시도',async()=>{
+ const first=loadKakaoMaps('fixture-javascript-key');const script=document.querySelector<HTMLScriptElement>('script[src^="https://dapi.kakao.com/v2/maps/sdk.js"]')!;assert.ok(script);const url=new URL(script.src);assert.equal(url.searchParams.get('appkey'),'fixture-javascript-key');assert.equal(url.searchParams.get('autoload'),'false');script.dispatchEvent(new dom.window.Event('error'));await assert.rejects(first,/카카오맵을 연결하지 못했습니다/);
+ const retry=loadKakaoMaps('fixture-javascript-key');const next=document.querySelector<HTMLScriptElement>('script[src^="https://dapi.kakao.com/v2/maps/sdk.js"]')!;let loaded=0;const maps={load:(callback:()=>void)=>{loaded++;callback();},Map:class{}};window.kakao={maps:maps as unknown as NonNullable<typeof window.kakao>['maps']};next.dispatchEvent(new dom.window.Event('load'));assert.equal(await retry,maps);assert.equal(loaded,1);next.remove();delete window.kakao;
 });

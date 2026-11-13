@@ -126,3 +126,12 @@
 - 공개 배포에서 블로그 50개, 지역 검색 5개, 상대 관심도 7개 관측점 HTTP 200. 키는 Vercel 서버 Secret에서 읽으며 브라우저로 반환하지 않음.
 - 제출 URL: https://local-signal-pdh.vercel.app . 추가 로그인이 필요하지 않은 공개 프로덕션 URL임을 확인. 기존 GitHub 연동의 main push 시 자동 배포도 확인.
 - 실제 Maps/OpenAI/검색광고 키 검증과 실브라우저/모바일 시각 QA는 남은 제한 사항. 키 없는 기능은 미연결 안내/비활성화를 유지하며 기본 기능은 작동.
+
+## 2026-11-13 · 사용자 요청: 카카오맵 전환
+- 사용자 제공 JavaScript 가이드 및 공식 Kakao Maps Web 가이드/레퍼런스 확인. 일반 로그인/공유 SDK가 아닌 지도 전용 SDK 사용.
+- 네이버 Maps 구현을 카카오맵으로 교체. autoload=false + kakao.maps.load 후 지도 생성, 실제 공공 좌표 마커, 목록 페이지/선택 업체 정보 연동, 관심업체 추가/삭제, 줌 컨트롤, ResizeObserver relayout 구현.
+- 카카오 이벤트 API 방식으로 해제하고 마커/DOM 정리. DEMO와 좌표 없는 업체에 임의 위치 생성하지 않음. SDK 실패/키 없음 안내, 검색·비교 독립 동작 유지.
+- 환경변수 NEXT_PUBLIC_KAKAO_MAP_KEY 정의 및 .env.local 빈 입력 자리 준비. 기존 로컬 인증값 보존. 상태 조회/설정 메뉴/Vercel 환경 동기화에 새 변수 반영. 이전 네이버 Maps ID는 재사용하지 않음.
+- KAKAO_MAP_SETUP.md에 카카오맵 사용 설정 ON, JavaScript 키, localhost 및 공개 Vercel 도메인 등록, 재빌드/배포 방법 기록. 요구 명세의 지도 공급자 변경도 기록.
+- 테스트 53개 및 npm.cmd run build 성공. SDK 모의 마커·클릭·관심업체·정리와 로드 URL/콜백/오류 후 재시도 검증. 실제 키가 없어 지도 타일/도메인 인증/실브라우저 검증은 수행하지 못함.
+- 키 입력 후 공개 지도 연결 검증 필요. GitHub에 코드 반영 후 기존 Vercel 자동 배포로 갱신.
