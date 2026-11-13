@@ -50,7 +50,9 @@ HTTP 검증은 프로덕션 서버를 `npm.cmd start -- --port 3001`로 실행�
 
 서버는 키가 포함된 요청 URL이나 제공기관 오류 원문을 클라이언트에 반환하지 않습니다. 요청당 타임아웃과 인스턴스별 임시 호출 제한이 있으며 Vercel 전체 호출량을 보장하는 분산 제한은 아닙니다. 키 없는 환경에서 실데이터 인증 성공을 검증할 수 없으므로 mock 응답 테스트와 실제 연결 테스트를 구분합니다.
 
-## GitHub / Vercel (5단계 실행 예정)
-현재 원격 업로드 및 배포는 수행하지 않습니다. 추후 GitHub에 저장소를 생성하고 이 프로젝트를 push한 후 Vercel에서 Import합니다. Framework는 Next.js, Build Command는 `npm run build`, 출력 경로는 기본값을 사용합니다. Vercel Settings → Environment Variables에 서버 키를 등록하고 재배포합니다. 지도 허용 도메인에 배포 도메인을 추가합니다. `.env.local`은 Git에 포함하지 않습니다.
+## GitHub / Vercel
+사용자 요청에 따라 [GitHub 저장소](https://github.com/hyeok-747-del/local-signal)에 연결하여 `main` 브랜치로 업로드했습니다. `.env.local`과 생성물은 포함하지 않습니다. 후속 변경은 같은 origin/main을 사용합니다.
+
+Vercel 배포는 아직 수행하지 않았습니다. 5단계에서 이 GitHub 저장소를 Import합니다. Framework는 Next.js, Build Command는 `npm run build`, 출력 경로는 기본값을 사용합니다. Vercel Settings → Environment Variables에 서버 키를 등록하고 배포합니다. 지도 허용 도메인에 배포 도메인을 추가합니다.
 
 기본 구성 참고: [Next.js 공식 설치 가이드](https://nextjs.org/docs/app/getting-started/installation), [Tailwind Next.js 설치](https://tailwindcss.com/docs/installation/framework-guides/nextjs).
