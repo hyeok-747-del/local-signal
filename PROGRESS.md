@@ -111,3 +111,13 @@
 - 마포구 지정 조회 HTTP 200 및 실제 수신 업체의 업체명·주소·업종을 함께 지정한 상세 필터 HTTP 200/동일 업체 매칭 확인.
 - check-public-data.mjs에 실제 키가 있을 때 시·군·구와 상세 필터까지 확인하는 검증 추가. 인증값·업체 원문은 출력하지 않고 상태와 건수만 출력.
 - 로컬 인증값과 소스/Git 객체 대조 검사에서 키 노출 없음. 이번 변경은 검증 스크립트/문서와 로컬 환경변수이며 앱 동작 코드는 변경하지 않음. 빌드/전체 단위 테스트는 재실행하지 않음(직전 51개 및 빌드 성공 기록 유지).
+
+## 2026-11-13 · 5단계 및 라운드 UI (배포 진행 중)
+- 사용자 승인에 따라 최종 점검과 배포 진행. 요청한 느낌에 맞춰 크림/옐로/민트/라일락, 둥근 카드/버튼/사이드바, 대시보드 환영 배너와 로컬시그널 브랜딩/파비콘 적용. 카카오 로고·상표를 복제하지 않음.
+- theme.css를 별도 관리하고 가독성을 위한 작은 글씨 대비 보완. 모바일 단일 열과 메뉴 스크롤, reduced-motion 기존 지원 유지. 불필요한 이전 검색 타이머 제거.
+- Vercel 기존 인증 확인 및 현재 열려 있던 pdh7/local-signal-pdh 프로젝트 연결. Production 도메인 https://local-signal-pdh.vercel.app.
+- Vercel CLI가 PUBLIC_* 이름의 Secret을 거부하여 클라우드에서는 DATA_API_KEY Secret 별칭 사용. 기존 로컬 PUBLIC_DATA_API_KEY 지원 유지, 서버에서만 해석. 네이버 API HUB 인증 쌍도 Production Secret 등록. 값은 표준입력으로 전달하고 로그/소스에 넣지 않음.
+- vercel.json(Next.js/npm ci/npm run build), .vercelignore, DEPLOYMENT.md 및 환경 동기화 스크립트 준비.
+- 검증: 기능/회귀 테스트 52개 성공, TypeScript 검사 및 최종 npm.cmd run build 성공. 브라우저 정적 파일 13개에서 서버 인증값 일치 없음. 소스/Git 인증정보 검사 통과.
+- 제한: 브라우저 제어 호스트 unavailable로 실브라우저/모바일 시각 QA는 수행하지 못함. DOM 테스트를 브라우저 시각 테스트로 보고하지 않음. Maps/OpenAI/검색광고는 해당 키 미설정 상태 유지.
+- GitHub 동기화 후 Vercel Production 배포 및 공개 HTTP/외부 API 검증 예정. 결과는 완료 후 추가 기록.

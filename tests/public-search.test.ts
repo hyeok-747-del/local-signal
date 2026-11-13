@@ -4,6 +4,7 @@ import {GET} from '../src/app/api/businesses/route.ts';
 import {searchPublic} from '../src/lib/server/public-data.ts';
 import {matchesSearch} from '../src/lib/search-filters.ts';
 import {scopeKey} from '../src/lib/discoveries.ts';
+import {publicDataValue} from '../src/lib/server/public-data-key.ts';
 const row={bizesId:'fixture',bizesNm:'테스트 커피',brchNm:'마포점',rdnmAdr:'서울특별시 마포구 테스트로 1',indsSclsNm:'카페',ctprvnNm:'서울특별시',signguNm:'마포구',stdrYm:'202609'};
 const fetchOriginal=globalThis.fetch,keyOriginal=process.env.PUBLIC_DATA_API_KEY;
 afterEach(()=>{globalThis.fetch=fetchOriginal;if(keyOriginal===undefined)delete process.env.PUBLIC_DATA_API_KEY;else process.env.PUBLIC_DATA_API_KEY=keyOriginal;});
@@ -31,3 +32,4 @@ test('키 없음은 외부 호출 없이 503, 인증과 한도 오류도 별도 
  globalThis.fetch=async()=>new Response('',{status:429});response=await GET(request());assert.equal(response.status,429);assert.equal((await response.json()).error.code,'RATE_LIMITED');
 });
 test('신규 발견 기록은 상세 검색 조건도 범위에 포함하고 기존 범위 키 유지',()=>{const base={province:'서울특별시',district:'',keyword:'카페'};assert.equal(scopeKey(base),JSON.stringify(['서울특별시','','카페']));assert.notEqual(scopeKey(base),scopeKey({...base,name:'테스트'}));assert.notEqual(scopeKey({...base,name:'테스트'}),scopeKey({...base,address:'테스트'}));});
+test('Vercel 서버 Secret 별칭과 기존 로컬 변수 모두 지원',()=>{assert.equal(publicDataValue({PUBLIC_DATA_API_KEY:' local-key '}),'local-key');assert.equal(publicDataValue({PUBLIC_DATA_API_KEY:'old-key',DATA_API_KEY:' cloud-key '}),'cloud-key');assert.equal(publicDataValue({}),'');});

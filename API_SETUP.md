@@ -24,6 +24,8 @@ NEXT_PUBLIC_NAVER_MAP_CLIENT_ID=네이버_Maps_공개_Key_ID
 
 공식 요청 변수에 맞춰 서버가 `PUBLIC_DATA_API_KEY`를 `ServiceKey`에 매핑합니다. 지역 목록은 `baroApi?resId=dong&catId=cty&type=json`, 업체 원본은 `storeListInDong?divId=ctprvnCd&key=시도코드&pageNo=페이지&numOfRows=1000&type=json`을 사용합니다. 시·군·구 선택 시 `divId=signguCd`와 공식 시·군·구 코드를 사용합니다. 인증키는 이 안내나 브라우저 요청에 넣지 않습니다.
 
+Vercel CLI의 Secret 등록 정책 때문에 배포 환경에서는 같은 인증값을 `DATA_API_KEY`라는 서버 Secret으로 등록합니다. 로컬의 `PUBLIC_DATA_API_KEY` 이름은 그대로 지원하며, 두 값이 모두 있으면 `DATA_API_KEY`가 우선합니다. 두 변수 모두 서버에서만 읽고 브라우저 응답에는 포함하지 않습니다.
+
 검색창의 “업체명·주소·업종 상세 검색”에서 각 조건을 지정할 수 있습니다. 통합 키워드와 모든 상세 조건을 서버에서 함께 필터합니다. 세부 문자열을 공공 API에 존재하지 않는 파라미터로 보내지 않습니다. 신규 발견 이력도 상세 검색 조건별로 구분합니다.
 
 빈 결과는 지역 원본 0건(`NO_REGIONAL_DATA`), 불러온 페이지의 조건 불일치(`NO_MATCH_IN_PAGE`), 요청 페이지가 비어 있음(`EMPTY_PAGE`)으로 구분합니다. 인증·호출 한도·통신·응답 형식 오류는 별도의 오류 응답으로 표시합니다. 원본을 읽지 못한 것을 정상 0건으로 처리하지 않습니다.

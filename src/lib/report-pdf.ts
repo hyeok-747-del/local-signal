@@ -10,5 +10,5 @@ export async function makeReportPdf(report:Report,fontBytes:Uint8Array,aiText=''
  draw(report.title,20);draw(`${report.start} ~ ${report.end}`,11);draw(`작성: ${new Date(report.createdAt).toLocaleString('ko-KR',{timeZone:'Asia/Seoul'})}`,9);y-=10;
  for(const line of report.lines)for(const part of line.split('\n')){if(part.startsWith('[')){y-=10;draw(part,12);}else draw(part);}
  if(aiText){y-=12;draw('[AI 추정 요약]',12);for(const line of aiText.split('\n'))draw(line);}
- doc.getPages().forEach((p,i)=>p.drawText(`LOCAL INSIGHT  |  ${i+1} / ${doc.getPageCount()}`,{x:54,y:32,size:8,font,color:rgb(.5,.56,.66)}));return doc.save();
+ doc.getPages().forEach((p,i)=>p.drawText(`LOCAL SIGNAL  |  ${i+1} / ${doc.getPageCount()}`,{x:54,y:32,size:8,font,color:rgb(.5,.56,.66)}));return doc.save();
 }

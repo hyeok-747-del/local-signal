@@ -1,0 +1,6 @@
+// Explicit deployment operation. Credentials travel over stdin, never argv or output.
+import env from '@next/env';
+import {spawnSync} from 'node:child_process';
+env.loadEnvConfig(process.cwd());
+const allowed=['PUBLIC_DATA_API_KEY','NAVER_API_HUB_CLIENT_ID','NAVER_API_HUB_CLIENT_SECRET','NEXT_PUBLIC_NAVER_MAP_CLIENT_ID','OPENAI_API_KEY','OPENAI_MODEL','NAVER_AD_CUSTOMER_ID','NAVER_AD_API_KEY','NAVER_AD_SECRET_KEY'];
+for(const name of allowed){const value=process.env[name]?.trim();if(!value)continue;const target=name==='PUBLIC_DATA_API_KEY'?'DATA_API_KEY':name;const sensitive=name.endsWith('_MODEL')||name.startsWith('NEXT_PUBLIC_')?'--no-sensitive':'--sensitive';const command=`npm.cmd exec --yes --package=vercel -- vercel env add ${target} --environment production --force --yes ${sensitive} --scope pdh7`;const result=spawnSync('cmd.exe',['/d','/s','/c',command],{input:value,encoding:'utf8',stdio:['pipe','pipe','pipe']});console.log(JSON.stringify({variable:target,status:result.status===0?'registered':'failed'}));if(result.status!==0){let diagnostic=result.stderr||'CLI operation failed';for(const candidate of Object.values(process.env))if(candidate&&candidate.length>=8)diagnostic=diagnostic.replaceAll(candidate,'[REDACTED]');console.error(diagnostic.slice(-2500));process.exitCode=1;break;}}

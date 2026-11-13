@@ -4,7 +4,8 @@
 
 This is a Next.js 16 App Router / React 19 / TypeScript / Tailwind CSS 4 project.
 Git is initialized with origin https://github.com/hyeok-747-del/local-signal.git
-and uses the main branch. Vercel deployment is not configured.
+and uses the main branch. Vercel project is pdh7/local-signal-pdh at
+https://local-signal-pdh.vercel.app. See DEPLOYMENT.md for environment sync.
 `src/app/page.tsx` renders `src/components/dashboard.tsx`; `src/lib` holds shared
 contracts and data helpers. Server integrations live in `src/lib/server` and
 are imported only by `src/app/api/*/route.ts`. Never import them in client code.
@@ -18,6 +19,8 @@ Stage 4 UI is in keyword-panel/review-panel/event-panel/report-panel.tsx.
 Shared analysis is in reviews.ts, events.ts and report.ts. PDF uses pdf-lib with
 the OFL font in public/fonts; keep full font embedding (subset caused missing
 Korean glyphs in visual QA). AI/server keys and models are server-only env.
+The rounded yellow/cream theme is src/app/theme.css, loaded after globals.css.
+Vercel uses DATA_API_KEY as server Secret alias for local PUBLIC_DATA_API_KEY.
 
 ## Working in this workspace
 

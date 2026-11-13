@@ -1,4 +1,4 @@
-# 로컬인사이트
+# 로컬시그널 · Local Signal
 전국 경쟁업체 AI 마케팅 분석 플랫폼. 현재 **4단계 추가 분석**까지 구현했습니다. [4단계 사용 안내](STAGE4_GUIDE.md)에 키워드·리뷰·이벤트·보고서·PDF 및 선택적 AI 설정을 정리했습니다. 공공 상가정보·네이버 블로그·네이버 Maps는 키 설정 후 사용합니다. 키 미설정 시 명확한 안내를 표시합니다. DEMO는 가상 데이터로 기본 기능을 체험하는 모드이며 실제 실적을 만들지 않습니다.
 
 ## 실행 (Windows PowerShell)
@@ -65,6 +65,6 @@ HTTP 검증은 프로덕션 서버를 `npm.cmd start -- --port 3001`로 실행�
 ## GitHub / Vercel
 사용자 요청에 따라 [GitHub 저장소](https://github.com/hyeok-747-del/local-signal)에 연결하여 `main` 브랜치로 업로드했습니다. `.env.local`과 생성물은 포함하지 않습니다. 후속 변경은 같은 origin/main을 사용합니다.
 
-Vercel 배포는 아직 수행하지 않았습니다. 5단계에서 이 GitHub 저장소를 Import합니다. Framework는 Next.js, Build Command는 `npm run build`, 출력 경로는 기본값을 사용합니다. Vercel Settings → Environment Variables에 서버 키를 등록하고 배포합니다. 지도 허용 도메인에 배포 도메인을 추가합니다.
+Vercel 프로젝트 `pdh7/local-signal-pdh`와 연결되어 있습니다. 배포 주소는 https://local-signal-pdh.vercel.app 이며 최종 배포/검증 기록은 PROGRESS.md를 확인하세요. 배포 설정과 서버 Secret 별칭은 [DEPLOYMENT.md](DEPLOYMENT.md)에 정리했습니다. 지도 키를 추가하면 허용 도메인에 이 주소를 등록합니다.
 
 기본 구성 참고: [Next.js 공식 설치 가이드](https://nextjs.org/docs/app/getting-started/installation), [Tailwind Next.js 설치](https://tailwindcss.com/docs/installation/framework-guides/nextjs).
