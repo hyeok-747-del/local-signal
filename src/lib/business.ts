@@ -1,0 +1,6 @@
+export type Business = { id:string; name:string; category:string; province:string; district:string; address:string; latitude?:number; longitude?:number; source?:'public-data'|'demo' };
+// 전부 가상의 데이터. 실존 업체의 마케팅 실적을 의미하지 않습니다.
+export const demoBusinesses: Business[] = Array.from({length:24}, (_,i) => ({id:`demo-${i+1}`,name:`[DEMO] ${['모노 커피','블루룸','오후의 테이블','스튜디오 온','로컬 라운지','소담 베이커리'][i%6]} ${Math.floor(i/6)+1}호점`,category:['카페','파티룸','케이터링'][i%3],province:'서울특별시',district:['마포구','강남구','성동구','송파구'][Math.floor(i/6)],address:`서울특별시 ${['마포구','강남구','성동구','송파구'][Math.floor(i/6)]} 예시로 ${i+1} (가상 주소)`}));
+export function filterBusinesses(items:Business[], province:string, district:string, keyword:string) {return items.filter(b => (!province||b.province===province)&&(!district||b.district===district)&&(!keyword.trim()||`${b.name} ${b.category} ${b.address}`.toLowerCase().includes(keyword.trim().toLowerCase())));}
+export function toggleId(ids:string[], id:string) {return ids.includes(id)?ids.filter(x=>x!==id):[...ids,id];}
+export function isBusiness(value:unknown):value is Business {if(!value||typeof value!=='object')return false; return ['id','name','category','province','district','address'].every(k=>typeof (value as Record<string,unknown>)[k]==='string');}
